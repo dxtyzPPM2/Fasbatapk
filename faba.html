@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Pengajuan Material FABA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        .status-pending { color: #f59e0b; }
+        .status-approved { color: #10b981; }
+        .status-rejected { color: #ef4444; }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .file-upload-area {
+            border: 2px dashed #d1d5db;
+            transition: all 0.3s ease;
+        }
+        .file-upload-area:hover {
+            border-color: #6366f1;
+            background-color: #f8fafc;
+        }
+        .file-upload-area.dragover {
+            border-color: #6366f1;
+            background-color: #ede9fe;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-industry text-2xl"></i>
+                    <h1 class="text-xl font-bold">Portal FABA</h1>
+                </div>
+                <div id="nav-menu" class="hidden md:flex items-center space-x-6">
+                    <span id="user-name" class="text-sm"></span>
+                    <button onclick="logout()" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg transition-all">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="min-h-screen flex items-center justify-center px-4">
+        <div class="max-w-md w-full">
+            <div class="bg-white rounded-xl card-shadow p-8 animate-fade-in">
+                <div class="text-center mb-8">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/63789f5f-804b-41ed-9217-149e43ac2869.png" alt="FABA company logo with industrial building and green energy symbols" class="mx-auto mb-4 rounded-full">
+                    <h2 class="text-3xl font-bold text-gray-800">Portal FABA</h2>
+                    <p class="text-gray-600 mt-2">Sistem Pengajuan Material FABA</p>
+                </div>
+                
+                <div id="login-tabs" class="flex mb-6 bg-gray-100 rounded-lg p-1">
+                    <button onclick="showLogin()" id="login-tab" class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all bg-white text-gray-800 shadow-sm">
+                        Login
+                    </button>
+                    <button onclick="showRegister()" id="register-tab" class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all text-gray-600">
+                        Daftar
+                    </button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <input type="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        </div>
+                        <button type="submit" class="w-full gradient-bg text-white py-3 rounded-lg hover:opacity-90 transition-all font-semibold">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Masuk
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Register Form -->
+                <form id="register-form" class="hidden" onsubmit="handleRegister(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                            <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">No. Handphone</label>
+                            <input type="tel" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <input type="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Alamat</label>
+                            <textarea required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="w-full gradient-bg text-white py-3 rounded-lg hover:opacity-90 transition-all font-semibold">
+                            <i class="fas fa-user-plus mr-2"></i>Daftar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="hidden">
+        <div class="flex">
+            <!-- Sidebar -->
+            <div class="w-64 gradient-bg text-white min-h-screen">
+                <div class="p-6">
+                    <div class="text-center mb-8">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5d1c13ec-462c-446c-9e5f-ac24563d5e3c.png" alt="User profile avatar with professional business attire" class="mx-auto rounded-full mb-3">
+                        <h3 id="sidebar-name" class="font-semibold text-lg"></h3>
+                        <p id="sidebar-role" class="text-sm opacity-75"></p>
+                    </div>
+                    
+                    <nav class="space-y-2">
+                        <a href="#" onclick="showDashboard()" class="menu-item flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-all">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="#" onclick="showPengajuan()" class="menu-item flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-all">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Ajukan Material</span>
+                        </a>
+                        <a href="#" onclick="showStatus()" class="menu-item flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-all">
+                            <i class="fas fa-list"></i>
+                            <span>Status Pengajuan</span>
+                        </a>
+                        <div id="admin-menu" class="hidden">
+                            <a href="#" onclick="showAdminDashboard()" class="menu-item flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-all">
+                                <i class="fas fa-cog"></i>
+                                <span>Kelola Pengajuan</span>
+                            </a>
+                            <a href="#" onclick="showLaporan()" class="menu-item flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition-all">
+                                <i class="fas fa-chart-bar"></i>
+                                <span>Laporan</span>
+                            </a>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 p-6">
+                <!-- Dashboard -->
+                <div id="dashboard-content" class="animate-fade-in">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Dashboard</h2>
+                        <p class="text-gray-600">Selamat datang di Portal Pengajuan Material FABA</p>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white rounded-xl card-shadow p-6 hover-scale">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-600 text-sm">Total Pengajuan</p>
+                                    <p id="total-pengajuan" class="text-3xl font-bold text-gray-800">0</p>
+                                </div>
+                                <div class="bg-blue-100 p-3 rounded-full">
+                                    <i class="fas fa-file-alt text-blue-600 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl card-shadow p-6 hover-scale">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-600 text-sm">Menunggu</p>
+                                    <p id="pending-pengajuan" class="text-3xl font-bold text-yellow-600">0</p>
+                                </div>
+                                <div class="bg-yellow-100 p-3 rounded-full">
+                                    <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl card-shadow p-6 hover-scale">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-600 text-sm">Disetujui</p>
+                                    <p id="approved-pengajuan" class="text-3xl font-bold text-green-600">0</p>
+                                </div>
+                                <div class="bg-green-100 p-3 rounded-full">
+                                    <i class="fas fa-check text-green-600 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl card-shadow p-6 hover-scale">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-600 text-sm">Ditolak</p>
+                                    <p id="rejected-pengajuan" class="text-3xl font-bold text-red-600">0</p>
+                                </div>
+                                <div class="bg-red-100 p-3 rounded-full">
+                                    <i class="fas fa-times text-red-600 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Cards -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Produk Material FABA</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-white rounded-xl card-shadow p-6 hover-scale text-center">
+                                <img src="D:\faba\faba.jpg" alt="Fly Ash Bottom" class="mx-auto mb-4 w-32 h-32 object-cover rounded-lg">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-2">Fly Ash Bottom</h4>
+                                <p class="text-gray-600 text-sm">Material abu terbang dan abu dasar untuk berbagai aplikasi konstruksi.</p>
+                            </div>
+                            <div class="bg-white rounded-xl card-shadow p-6 hover-scale text-center">
+                                <img src="D:\faba\paving faba.jpg" alt="Paving FABA" class="mx-auto mb-4 w-32 h-32 object-cover rounded-lg">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-2">Paving FABA</h4>
+                                <p class="text-gray-600 text-sm">Paving block ramah lingkungan dari material FABA, kuat dan tahan lama.</p>
+                            </div>
+                            <div class="bg-white rounded-xl card-shadow p-6 hover-scale text-center">
+                                <img src="D:\faba\batako faba.jpg" alt="Batako FABA" class="mx-auto mb-4 w-32 h-32 object-cover rounded-lg">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-2">Batako FABA</h4>
+                                <p class="text-gray-600 text-sm">Batako berkualitas tinggi yang memanfaatkan limbah FABA, mengurangi dampak lingkungan.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="bg-white rounded-xl card-shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-xl font-semibold text-gray-800">Aktivitas Terbaru</h3>
+                        </div>
+                        <div class="p-6">
+                            <div id="recent-activity" class="space-y-4">
+                                <!-- Recent activity items will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Pengajuan -->
+                <div id="pengajuan-content" class="hidden animate-fade-in">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Pengajuan Material FABA</h2>
+                        <p class="text-gray-600">Lengkapi formulir di bawah untuk mengajukan material</p>
+                    </div>
+
+                    <form id="pengajuan-form" onsubmit="handlePengajuan(event)" class="bg-white rounded-xl card-shadow p-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Material *</label>
+                                <select required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                    <option value="">Pilih Jenis Material</option>
+                                    <option value="Fly Ash Bottom">Fly Ash Bottom</option>
+                                    <option value="Paving FABA">Paving FABA</option>
+                                    <option value="Batako FABA">Batako FABA</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah/Volume (m³) *</label>
+                                <input type="number" required min="1" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Pengambilan *</label>
+                                <input type="date" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Lokasi Tujuan *</label>
+                                <input type="text" required placeholder="Alamat lengkap tujuan" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4">Upload Dokumen Persyaratan</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Proposal Permintaan -->
+                                <div class="file-upload-container">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Proposal Permintaan *</label>
+                                    <div class="file-upload-area p-6 rounded-lg text-center cursor-pointer" onclick="document.getElementById('proposal').click()">
+                                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                                        <p class="text-gray-600">Klik untuk upload atau drag & drop</p>
+                                        <p class="text-xs text-gray-500 mt-1">PDF, JPG, PNG (Max: 5MB)</p>
+                                        <input type="file" id="proposal" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="handleFileUpload(this, 'proposal-preview')">
+                                    </div>
+                                    <div id="proposal-preview" class="mt-2"></div>
+                                </div>
+
+                                <!-- KTP Pemohon -->
+                                <div class="file-upload-container">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">KTP Pemohon *</label>
+                                    <div class="file-upload-area p-6 rounded-lg text-center cursor-pointer" onclick="document.getElementById('ktp').click()">
+                                        <i class="fas fa-id-card text-3xl text-gray-400 mb-2"></i>
+                                        <p class="text-gray-600">Klik untuk upload atau drag & drop</p>
+                                        <p class="text-xs text-gray-500 mt-1">JPG, PNG (Max: 5MB)</p>
+                                        <input type="file" id="ktp" accept=".jpg,.jpeg,.png" class="hidden" onchange="handleFileUpload(this, 'ktp-preview')">
+                                    </div>
+                                    <div id="ktp-preview" class="mt-2"></div>
+                                </div>
+
+                                <!-- Foto Kendaraan -->
+                                <div class="file-upload-container">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Foto Kendaraan Pengangkut *</label>
+                                    <div class="file-upload-area p-6 rounded-lg text-center cursor-pointer" onclick="document.getElementById('kendaraan').click()">
+                                        <i class="fas fa-truck text-3xl text-gray-400 mb-2"></i>
+                                        <p class="text-gray-600">Klik untuk upload atau drag & drop</p>
+                                        <p class="text-xs text-gray-500 mt-1">JPG, PNG (Max: 5MB)</p>
+                                        <input type="file" id="kendaraan" accept=".jpg,.jpeg,.png" class="hidden" onchange="handleFileUpload(this, 'kendaraan-preview')">
+                                    </div>
+                                    <div id="kendaraan-preview" class="mt-2"></div>
+                                </div>
+
+                                <!-- Surat Kendaraan -->
+                                <div class="file-upload-container">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Surat Kendaraan (STNK) *</label>
+                                    <div class="file-upload-area p-6 rounded-lg text-center cursor-pointer" onclick="document.getElementById('stnk').click()">
+                                        <i class="fas fa-file-alt text-3xl text-gray-400 mb-2"></i>
+                                        <p class="text-gray-600">Klik untuk upload atau drag & drop</p>
+                                        <p class="text-xs text-gray-500 mt-1">JPG, PNG (Max: 5MB)</p>
+                                        <input type="file" id="stnk" accept=".jpg,.jpeg,.png" class="hidden" onchange="handleFileUpload(this, 'stnk-preview')">
+                                    </div>
+                                    <div id="stnk-preview" class="mt-2"></div>
+                                </div>
+
+                                <!-- KIR Kendaraan -->
+                                <div class="file-upload-container col-span-1 md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">KIR Kendaraan *</label>
+                                    <div class="file-upload-area p-6 rounded-lg text-center cursor-pointer" onclick="document.getElementById('kir').click()">
+                                        <i class="fas fa-certificate text-3xl text-gray-400 mb-2"></i>
+                                        <p class="text-gray-600">Klik untuk upload atau drag & drop</p>
+                                        <p class="text-xs text-gray-500 mt-1">JPG, PNG (Max: 5MB)</p>
+                                        <input type="file" id="kir" accept=".jpg,.jpeg,.png" class="hidden" onchange="handleFileUpload(this, 'kir-preview')">
+                                    </div>
+                                    <div id="kir-preview" class="mt-2"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" onclick="resetForm()" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-all">
+                                Reset
+                            </button>
+                            <button type="submit" class="px-6 py-3 gradient-bg text-white rounded-lg hover:opacity-90 transition-all font-semibold">
+                                <i class="fas fa-paper-plane mr-2"></i>Submit Pengajuan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Status Pengajuan -->
+                <div id="status-content" class="hidden animate-fade-in">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Status Pengajuan</h2>
+                        <p class="text-gray-600">Pantau status pengajuan material Anda</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl card-shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                                <h3 class="text-xl font-semibold text-gray-800 mb-4 md:mb-0">Daftar Pengajuan</h3>
+                                <div class="flex space-x-2">
+                                    <select id="filter-status" onchange="filterPengajuan()" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                        <option value="">Semua Status</option>
+                                        <option value="pending">Menunggu</option>
+                                        <option value="approved">Disetujui</option>
+                                        <option value="rejected">Ditolak</option>
+                                    </select>
+                                    <input type="text" id="search-pengajuan" placeholder="Cari no. tiket..." class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" onkeyup="searchPengajuan()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Tiket</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Material</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Ajuan</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pengajuan-table" class="bg-white divide-y divide-gray-200">
+                                    <!-- Table rows will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Dashboard -->
+                <div id="admin-dashboard-content" class="hidden animate-fade-in">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Admin Dashboard</h2>
+                        <p class="text-gray-600">Kelola pengajuan material FABA</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl card-shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-xl font-semibold text-gray-800">Pengajuan Menunggu Persetujuan</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Tiket</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pemohon</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Material</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-pengajuan-table" class="bg-white divide-y divide-gray-200">
+                                    <!-- Admin table rows will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Laporan -->
+                <div id="laporan-content" class="hidden animate-fade-in">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Laporan</h2>
+                        <p class="text-gray-600">Statistik dan laporan pengajuan material</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl card-shadow p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Grafik Pengajuan Bulanan</h3>
+                            <div class="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+                                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/48f4d4ed-549a-4a0c-a6da-9399e9ac0cb0.png" alt="Monthly submission chart showing bar graph with months on x-axis and number of applications on y-axis" class="max-w-full h-auto">
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl card-shadow p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Distribusi Status</h3>
+                            <div class="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+                                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/a1fa1cf5-af71-406b-8fa5-f8ab3db77bdb.png" alt="Pie chart showing distribution of application status with different colored segments for pending, approved, and rejected applications" class="max-w-full h-auto">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 bg-white rounded-xl card-shadow p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Export Laporan</h3>
+                            <div class="space-x-2">
+                                <button onclick="exportToExcel()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all">
+                                    <i class="fas fa-file-excel mr-2"></i>Excel
+                                </button>
+                                <button onclick="exportToPDF()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all">
+                                    <i class="fas fa-file-pdf mr-2"></i>PDF
+                                </button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Dari Tanggal</label>
+                                <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Sampai Tanggal</label>
+                                <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                    <option value="">Semua</option>
+                                    <option value="pending">Menunggu</option>
+                                    <option value="approved">Disetujui</option>
+                                    <option value="rejected">Ditolak</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Pengajuan Detail -->
+    <div id="detail-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl max-w-4xl w-full mx-4 max-h-90vh overflow-y-auto">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-semibold text-gray-800">Detail Pengajuan</h3>
+                    <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="modal-content" class="p-6">
+                <!-- Modal content will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span id="toast-message">Notifikasi</span>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let pengajuanData = [];
+        let currentView = 'dashboard';
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showMainApp();
+            } else {
+                showLoginScreen();
+            }
+
+            // Initialize sample data
+            initializeSampleData();
+            
+            // Setup drag and drop for file uploads
+            setupFileUpload();
+        });
+
+        // Login/Register functions
+        function showLogin() {
+            document.getElementById('login-form').classList.remove('hidden');
+            document.getElementById('register-form').classList.add('hidden');
+            document.getElementById('login-tab').classList.add('bg-white', 'text-gray-800', 'shadow-sm');
+            document.getElementById('login-tab').classList.remove('text-gray-600');
+            document.getElementById('register-tab').classList.remove('bg-white', 'text-gray-800', 'shadow-sm');
+            document.getElementById('register-tab').classList.add('text-gray-600');
+        }
+
+        function showRegister() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('register-form').classList.remove('hidden');
+            document.getElementById('register-tab').classList.add('bg-white', 'text-gray-800', 'shadow-sm');
+            document.getElementById('register-tab').classList.remove('text-gray-600');
+            document.getElementById('login-tab').classList.remove('bg-white', 'text-gray-800', 'shadow-sm');
+            document.getElementById('login-tab').classList.add('text-gray-600');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const email = formData.get('email') || event.target.querySelector('input[type="email"]').value;
+            const password = formData.get('password') || event.target.querySelector('input[type="password"]').value;
+
+            // Demo login logic
+            if (email === 'admin@faba.com' && password === 'admin123') {
+                currentUser = {
+                    id: 1,
+                    nama: 'Administrator FABA',
+                    email: email,
+                    role: 'admin'
+                };
+            } else {
+                currentUser = {
+                    id: 2,
+                    nama: 'John Doe',
+                    email: email,
+                    role: 'user'
+                };
+            }
+
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showMainApp();
+            showNotification('Login berhasil!', 'success');
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const form = event.target;
+            const nama = form.querySelector('input[type="text"]').value;
+            const email = form.querySelector('input[type="email"]').value;
+
+            currentUser = {
+                id: Date.now(),
+                nama: nama,
+                email: email,
+                role: 'user'
+            };
+
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showMainApp();
+            showNotification('Registrasi berhasil!', 'success');
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            showLoginScreen();
+            showNotification('Logout berhasil!', 'info');
+        }
+
+        // App navigation functions
+        function showLoginScreen() {
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('hidden');
+        }
+
+        function showMainApp() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            
+            // Update user info
+            document.getElementById('user-name').textContent = currentUser.nama;
+            document.getElementById('sidebar-name').textContent = currentUser.nama;
+            document.getElementById('sidebar-role').textContent = currentUser.role === 'admin' ? 'Administrator' : 'Pemohon';
+            
+            // Show admin menu if admin
+            if (currentUser.role === 'admin') {
+                document.getElementById('admin-menu').classList.remove('hidden');
+            }
+            
+            // Show dashboard by default
+            showDashboard();
+        }
+
+        function showDashboard() {
+            hideAllContent();
+            document.getElementById('dashboard-content').classList.remove('hidden');
+            updateDashboardStats();
+            currentView = 'dashboard';
+            updateActiveMenu();
+        }
+
+        function showPengajuan() {
+            hideAllContent();
+            document.getElementById('pengajuan-content').classList.remove('hidden');
+            currentView = 'pengajuan';
+            updateActiveMenu();
+        }
+
+        function showStatus() {
+            hideAllContent();
+            document.getElementById('status-content').classList.remove('hidden');
+            updateStatusTable();
+            currentView = 'status';
+            updateActiveMenu();
+        }
+
+        function showAdminDashboard() {
+            hideAllContent();
+            document.getElementById('admin-dashboard-content').classList.remove('hidden');
+            updateAdminTable();
+            currentView = 'admin-dashboard';
+            updateActiveMenu();
+        }
+
+        function showLaporan() {
+            hideAllContent();
+            document.getElementById('laporan-content').classList.remove('hidden');
+            currentView = 'laporan';
+            updateActiveMenu();
+        }
+
+        function hideAllContent() {
+            const contents = ['dashboard-content', 'pengajuan-content', 'status-content', 'admin-dashboard-content', 'laporan-content'];
+            contents.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+        }
+
+        function updateActiveMenu() {
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('bg-white', 'bg-opacity-20');
+            });
+            
+            // Add active class based on current view
+            const menuMap = {
+                'dashboard': 0,
+                'pengajuan': 1,
+                'status': 2,
+                'admin-dashboard': 3,
+                'laporan': 4
+            };
+            
+            const menuItems = document.querySelectorAll('.menu-item');
+            const activeIndex = menuMap[currentView];
+            if (menuItems[activeIndex]) {
+                menuItems[activeIndex].classList.add('bg-white', 'bg-opacity-20');
+            }
+        }
+
+        // Initialize sample data
+        function initializeSampleData() {
+            if (!localStorage.getItem('pengajuanData')) {
+                pengajuanData = [
+                    {
+                        id: 1,
+                        userId: 2,
+                        nomorTiket: 'FABA-20240101-0001',
+                        jenisMaterial: 'Fly Ash Bottom',
+                        volume: 10,
+                        tanggalPengambilan: '2024-01-15',
+                        lokasiTujuan: 'Jl. Sudirman No. 123, Jakarta',
+                        status: 'approved',
+                        tanggalPengajuan: '2024-01-01',
+                        pemohon: 'John Doe',
+                        catatan: 'Pengajuan disetujui',
+                        dokumen: {
+                            proposal: 'proposal_1.pdf',
+                            ktp: 'ktp_1.jpg',
+                            kendaraan: 'kendaraan_1.jpg',
+                            stnk: 'stnk_1.jpg',
+                            kir: 'kir_1.jpg'
+                        }
+                    },
+                    {
+                        id: 2,
+                        userId: 2,
+                        nomorTiket: 'FABA-20240102-0002',
+                        jenisMaterial: 'Paving FABA',
+                        volume: 5,
+                        tanggalPengambilan: '2024-01-20',
+                        lokasiTujuan: 'Jl. Gatot Subroto No. 456, Jakarta',
+                        status: 'pending',
+                        tanggalPengajuan: '2024-01-02',
+                        pemohon: 'John Doe',
+                        catatan: '',
+                        dokumen: {
+                            proposal: 'proposal_2.pdf',
+                            ktp: 'ktp_2.jpg',
+                            kendaraan: 'kendaraan_2.jpg',
+                            stnk: 'stnk_2.jpg',
+                            kir: 'kir_2.jpg'
+                        }
+                    },
+                    {
+                        id: 3,
+                        userId: 2,
+                        nomorTiket: 'FABA-20240103-0003',
+                        jenisMaterial: 'Batako FABA',
+                        volume: 8,
+                        tanggalPengambilan: '2024-01-25',
+                        lokasiTujuan: 'Jl. Thamrin No. 789, Jakarta',
+                        status: 'rejected',
+                        tanggalPengajuan: '2024-01-03',
+                        pemohon: 'John Doe',
+                        catatan: 'Dokumen tidak lengkap',
+                        dokumen: {
+                            proposal: 'proposal_3.pdf',
+                            ktp: 'ktp_3.jpg',
+                            kendaraan: 'kendaraan_3.jpg',
+                            stnk: 'stnk_3.jpg',
+                            kir: 'kir_3.jpg'
+                        }
+                    }
+                ];
+                localStorage.setItem('pengajuanData', JSON.stringify(pengajuanData));
+            } else {
+                pengajuanData = JSON.parse(localStorage.getItem('pengajuanData'));
+            }
+        }
+
+        // Dashboard functions
+        function updateDashboardStats() {
+            const userPengajuan = pengajuanData.filter(p => currentUser.role === 'admin' || p.userId === currentUser.id);
+            
+            document.getElementById('total-pengajuan').textContent = userPengajuan.length;
+            document.getElementById('pending-pengajuan').textContent = userPengajuan.filter(p => p.status === 'pending').length;
+            document.getElementById('approved-pengajuan').textContent = userPengajuan.filter(p => p.status === 'approved').length;
+            document.getElementById('rejected-pengajuan').textContent = userPengajuan.filter(p => p.status === 'rejected').length;
+
+            // Update recent activity
+            const recentActivity = document.getElementById('recent-activity');
+            const recentItems = userPengajuan.slice(-5).reverse();
+            
+            if (recentItems.length === 0) {
+                recentActivity.innerHTML = '<p class="text-gray-500">Belum ada aktivitas terbaru</p>';
+            } else {
+                recentActivity.innerHTML = recentItems.map(item => `
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-3 h-3 rounded-full ${item.status === 'pending' ? 'bg-yellow-400' : item.status === 'approved' ? 'bg-green-400' : 'bg-red-400'}"></div>
+                            <div>
+                                <p class="font-medium text-gray-800">${item.nomorTiket}</p>
+                                <p class="text-sm text-gray-600">${item.jenisMaterial} - ${item.volume} m³</p>
+                            </div>
+                        </div>
+                        <span class="text-sm text-gray-500">${new Date(item.tanggalPengajuan).toLocaleDateString('id-ID')}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Pengajuan form functions
+        function handlePengajuan(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            // Validate required files
+            const requiredFiles = ['proposal', 'ktp', 'kendaraan', 'stnk', 'kir'];
+            const missingFiles = requiredFiles.filter(file => !document.getElementById(file).files.length);
+            
+            if (missingFiles.length > 0) {
+                showNotification('Harap upload semua dokumen yang diperlukan', 'error');
+                return;
+            }
+
+            // Create new pengajuan
+            const newPengajuan = {
+                id: Date.now(),
+                userId: currentUser.id,
+                nomorTiket: generateTicketNumber(),
+                jenisMaterial: form.querySelector('select').value,
+                volume: parseInt(form.querySelector('input[type="number"]').value),
+                tanggalPengambilan: form.querySelector('input[type="date"]').value,
+                lokasiTujuan: form.querySelector('input[type="text"]').value,
+                status: 'pending',
+                tanggalPengajuan: new Date().toISOString().split('T')[0],
+                pemohon: currentUser.nama,
+                catatan: '',
+                dokumen: {
+                    proposal: document.getElementById('proposal').files[0]?.name || '',
+                    ktp: document.getElementById('ktp').files[0]?.name || '',
+                    kendaraan: document.getElementById('kendaraan').files[0]?.name || '',
+                    stnk: document.getElementById('stnk').files[0]?.name || '',
+                    kir: document.getElementById('kir').files[0]?.name || ''
+                }
+            };
+
+            pengajuanData.push(newPengajuan);
+            localStorage.setItem('pengajuanData', JSON.stringify(pengajuanData));
+            
+            showNotification(`Pengajuan berhasil disubmit! No. Tiket: ${newPengajuan.nomorTiket}`, 'success');
+            resetForm();
+        }
+
+        function generateTicketNumber() {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const random = String(Math.floor(Math.random() * 9999) + 1).padStart(4, '0');
+            return `FABA-${year}${month}${day}-${random}`;
+        }
+
+        function resetForm() {
+            document.getElementById('pengajuan-form').reset();
+            // Clear file previews
+            ['proposal', 'ktp', 'kendaraan', 'stnk', 'kir'].forEach(id => {
+                document.getElementById(`${id}-preview`).innerHTML = '';
+            });
+        }
+
+        // File upload functions
+        function setupFileUpload() {
+            const fileInputs = ['proposal', 'ktp', 'kendaraan', 'stnk', 'kir'];
+            
+            fileInputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                const uploadArea = input.parentElement;
+                
+                // Drag and drop events
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+                
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('dragover');
+                });
+                
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        input.files = files;
+                        handleFileUpload(input, `${inputId}-preview`);
+                    }
+                });
+            });
+        }
+
+        function handleFileUpload(input, previewId) {
+            const file = input.files[0];
+            const preview = document.getElementById(previewId);
+            
+            if (!file) {
+                preview.innerHTML = '';
+                return;
+            }
+            
+            // Validate file size (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification('Ukuran file maksimal 5MB', 'error');
+                input.value = '';
+                preview.innerHTML = '';
+                return;
+            }
+            
+            // Show preview
+            const fileInfo = `
+                <div class="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-3 mt-2">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-check-circle text-green-500"></i>
+                        <span class="text-sm text-green-700">${file.name}</span>
+                    </div>
+                    <button type="button" onclick="removeFile('${input.id}', '${previewId}')" class="text-red-500 hover:text-red-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            preview.innerHTML = fileInfo;
+        }
+
+        function removeFile(inputId, previewId) {
+            document.getElementById(inputId).value = '';
+            document.getElementById(previewId).innerHTML = '';
+        }
+
+        // Status table functions
+        function updateStatusTable() {
+            const userPengajuan = pengajuanData.filter(p => currentUser.role === 'admin' || p.userId === currentUser.id);
+            const tbody = document.getElementById('pengajuan-table');
+            
+            if (userPengajuan.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">Belum ada pengajuan</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = userPengajuan.map(item => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.nomorTiket}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.jenisMaterial}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.volume} m³</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${new Date(item.tanggalPengajuan).toLocaleDateString('id-ID')}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(item.status)}">
+                            ${getStatusText(item.status)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="showDetail(${item.id})" class="text-indigo-600 hover:text-indigo-900">
+                            <i class="fas fa-eye mr-1"></i>Detail
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateAdminTable() {
+            const pendingPengajuan = pengajuanData.filter(p => p.status === 'pending');
+            const tbody = document.getElementById('admin-pengajuan-table');
+            
+            if (pendingPengajuan.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">Tidak ada pengajuan menunggu persetujuan</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = pendingPengajuan.map(item => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.nomorTiket}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.pemohon}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.jenisMaterial}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.volume} m³</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${new Date(item.tanggalPengajuan).toLocaleDateString('id-ID')}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <button onclick="showDetail(${item.id})" class="text-indigo-600 hover:text-indigo-900">
+                            <i class="fas fa-eye mr-1"></i>Detail
+                        </button>
+                        <button onclick="approvePengajuan(${item.id})" class="text-green-600 hover:text-green-900">
+                            <i class="fas fa-check mr-1"></i>Setujui
+                        </button>
+                        <button onclick="rejectPengajuan(${item.id})" class="text-red-600 hover:text-red-900">
+                            <i class="fas fa-times mr-1"></i>Tolak
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getStatusColor(status) {
+            switch(status) {
+                case 'pending': return 'bg-yellow-100 text-yellow-800';
+                case 'approved': return 'bg-green-100 text-green-800';
+                case 'rejected': return 'bg-red-100 text-red-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        function getStatusText(status) {
+            switch(status) {
+                case 'pending': return 'Menunggu';
+                case 'approved': return 'Disetujui';
+                case 'rejected': return 'Ditolak';
+                default: return 'Unknown';
+            }
+        }
+
+        // Detail modal functions
+        function showDetail(pengajuanId) {
+            const pengajuan = pengajuanData.find(p => p.id === pengajuanId);
+            if (!pengajuan) return;
+            
+            const modalContent = document.getElementById('modal-content');
+            modalContent.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Informasi Pengajuan</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-sm font-medium text-gray-600">No. Tiket</label>
+                                <p class="text-gray-800">${pengajuan.nomorTiket}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-600">Pemohon</label>
+                                <p class="text-gray-800">${pengajuan.pemohon}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-600">Jenis Material</label>
+                                <p class="text-gray-800">${pengajuan.jenisMaterial}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-600">Volume</label>
+                                <p class="text-gray-800">${pengajuan.volume} m³</p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-600">Tanggal Pengambilan</label>
+                                <p class="text-gray-800">${new Date(pengajuan.tanggalPengambilan).toLocaleDateString('id-ID')}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-600">Lokasi Tujuan</label>
+                                <p class="text-gray-800">${pengajuan.lokasiTujuan}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-600">Status</label>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(pengajuan.status)}">
+                                    ${getStatusText(pengajuan.status)}
+                                </span>
+                            </div>
+                            ${pengajuan.catatan ? `
+                                <div>
+                                    <label class="text-sm font-medium text-gray-600">Catatan</label>
+                                    <p class="text-gray-800">${pengajuan.catatan}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Dokumen</h4>
+                        <div class="space-y-3">
+                            ${Object.entries(pengajuan.dokumen).map(([key, value]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-file text-gray-500"></i>
+                                        <span class="text-sm text-gray-700">${getDokumenLabel(key)}</span>
+                                    </div>
+                                    <span class="text-xs text-gray-500">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        ${currentUser.role === 'admin' && pengajuan.status === 'pending' ? `
+                            <div class="mt-6 space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Catatan Admin</label>
+                                    <textarea id="admin-catatan" class="w-full px-3 py-2 border border-gray-300 rounded-lg" rows="3" placeholder="Tambahkan catatan..."></textarea>
+                                </div>
+                                <div class="flex space-x-3">
+                                    <button onclick="approvePengajuan(${pengajuan.id})" class="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-all">
+                                        <i class="fas fa-check mr-2"></i>Setujui
+                                    </button>
+                                    <button onclick="rejectPengajuan(${pengajuan.id})" class="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-all">
+                                        <i class="fas fa-times mr-2"></i>Tolak
+                                    </button>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('detail-modal').classList.remove('hidden');
+            document.getElementById('detail-modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+            document.getElementById('detail-modal').classList.remove('flex');
+        }
+
+        function getDokumenLabel(key) {
+            const labels = {
+                proposal: 'Proposal Permintaan',
+                ktp: 'KTP Pemohon',
+                kendaraan: 'Foto Kendaraan',
+                stnk: 'STNK',
+                kir: 'KIR Kendaraan'
+            };
+            return labels[key] || key;
+        }
+
+        // Admin approval functions
+        function approvePengajuan(pengajuanId) {
+            const pengajuan = pengajuanData.find(p => p.id === pengajuanId);
+            if (!pengajuan) return;
+            
+            const catatan = document.getElementById('admin-catatan')?.value || 'Pengajuan disetujui';
+            
+            pengajuan.status = 'approved';
+            pengajuan.catatan = catatan;
+            
+            localStorage.setItem('pengajuanData', JSON.stringify(pengajuanData));
+            
+            showNotification('Pengajuan berhasil disetujui!', 'success');
+            closeModal();
+            updateAdminTable();
+            updateDashboardStats();
+        }
+
+        function rejectPengajuan(pengajuanId) {
+            const pengajuan = pengajuanData.find(p => p.id === pengajuanId);
+            if (!pengajuan) return;
+            
+            const catatan = document.getElementById('admin-catatan')?.value || 'Pengajuan ditolak';
+            
+            if (!catatan.trim()) {
+                showNotification('Harap berikan alasan penolakan', 'error');
+                return;
+            }
+            
+            pengajuan.status = 'rejected';
+            pengajuan.catatan = catatan;
+            
+            localStorage.setItem('pengajuanData', JSON.stringify(pengajuanData));
+            
+            showNotification('Pengajuan telah ditolak!', 'info');
+            closeModal();
+            updateAdminTable();
+            updateDashboardStats();
+        }
+
+        // Filter and search functions
+        function filterPengajuan() {
+            const filter = document.getElementById('filter-status').value;
+            updateStatusTable();
+            
+            if (filter) {
+                const rows = document.querySelectorAll('#pengajuan-table tr');
+                rows.forEach(row => {
+                    const statusCell = row.cells[4];
+                    if (statusCell) {
+                        const status = statusCell.textContent.toLowerCase().trim();
+                        const showRow = (filter === 'pending' && status.includes('menunggu')) ||
+                                       (filter === 'approved' && status.includes('disetujui')) ||
+                                       (filter === 'rejected' && status.includes('ditolak'));
+                        row.style.display = showRow ? '' : 'none';
+                    }
+                });
+            }
+        }
+
+        function searchPengajuan() {
+            const search = document.getElementById('search-pengajuan').value.toLowerCase();
+            const rows = document.querySelectorAll('#pengajuan-table tr');
+            
+            rows.forEach(row => {
+                const nomorTiket = row.cells[0]?.textContent.toLowerCase() || '';
+                row.style.display = nomorTiket.includes(search) ? '' : 'none';
+            });
+        }
+
+        // Export functions
+        function exportToExcel() {
+            showNotification('Export ke Excel akan segera dimulai...', 'info');
+            // Implementation would go here
+        }
+
+        function exportToPDF() {
+            showNotification('Export ke PDF akan segera dimulai...', 'info');
+            // Implementation would go here
+        }
+
+        // Notification function
+        function showNotification(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            // Set colors based on type
+            toast.className = `fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg transform transition-transform duration-300 z-50 ${
+                type === 'success' ? 'bg-green-500' : 
+                type === 'error' ? 'bg-red-500' : 
+                type === 'info' ? 'bg-blue-500' : 'bg-yellow-500'
+            } text-white`;
+            
+            toastMessage.textContent = message;
+            
+            // Show toast
+            toast.style.transform = 'translateX(0)';
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+            }, 3000);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('detail-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
